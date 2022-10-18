@@ -1,59 +1,65 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=5 format=3 uid="uid://cnm1o6ksalar3"]
 
-[ext_resource path="res://FPSController/Player.gd" type="Script" id=1]
+[ext_resource type="Script" path="res://FPSController/Player.gd" id="1"]
+[ext_resource type="Texture2D" uid="uid://d3yawnn2nqfd" path="res://GFX/title_screen.png" id="2_qf8tc"]
 
-[sub_resource type="CapsuleShape" id=1]
-radius = 0.5
-height = 1.55
+[sub_resource type="CapsuleShape3D" id="1"]
+height = 2.91411
 
-[sub_resource type="CapsuleMesh" id=2]
-radius = 0.5
-mid_height = 1.75
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_h8f40"]
 
-[node name="Player" type="KinematicBody"]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.985076, 0 )
-script = ExtResource( 1 )
+[node name="Player" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.985076, 0)
+script = ExtResource("1")
 
-[node name="CollisionShape" type="CollisionShape" parent="."]
-transform = Transform( 1, 0, 0, 0, -0.0121821, 0.999926, 0, -0.999926, -0.0121821, 0, 0.485958, 0 )
-shape = SubResource( 1 )
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.485958, 0)
+shape = SubResource("1")
 
-[node name="MeshInstance" type="MeshInstance" parent="."]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, -0.0100676, 0.390338, 0.00344968 )
-mesh = SubResource( 2 )
+[node name="CameraRoot" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.24218, -0.351517)
 
-[node name="CameraRoot" type="Spatial" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.24218, -0.351517 )
+[node name="Camera3D" type="Camera3D" parent="CameraRoot"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.194412, 0)
 
-[node name="Camera" type="Camera" parent="CameraRoot"]
+[node name="UI" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
 
-[node name="RayCast" type="RayCast" parent="CameraRoot/Camera"]
-enabled = true
-cast_to = Vector3( 0, 0, -2 )
-
-[node name="Death" type="Control" parent="."]
-margin_right = 40.0
-margin_bottom = 40.0
-
-[node name="Panel" type="Panel" parent="Death"]
+[node name="DeathPanel" type="Panel" parent="UI"]
 visible = false
-anchor_left = 12.162
-anchor_top = 7.95
-anchor_right = 12.162
-anchor_bottom = 7.95
-margin_left = -588.48
-margin_top = -371.0
-margin_right = 588.52
-margin_bottom = 371.0
+material = SubResource("CanvasItemMaterial_h8f40")
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 14.9
+anchor_top = 8.625
+anchor_right = 14.9
+anchor_bottom = 8.625
+offset_left = -714.0
+offset_top = -449.0
+offset_right = 661.0
+offset_bottom = 405.0
+grow_horizontal = 2
+grow_vertical = 2
 
-[node name="Label" type="Label" parent="Death"]
+[node name="TitleScreen" type="Sprite2D" parent="UI/DeathPanel"]
+position = Vector2(698, 464)
+texture = ExtResource("2_qf8tc")
+
+[node name="DeathLabel" type="Label" parent="UI"]
 visible = false
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = 464.5
-margin_top = 273.0
-margin_right = 519.5
-margin_bottom = 287.0
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 14.775
+anchor_top = 7.825
+anchor_right = 14.775
+anchor_bottom = 7.825
+offset_left = -35.0
+offset_top = -13.0
+offset_right = 33.0
+offset_bottom = 13.0
+grow_horizontal = 2
+grow_vertical = 2
 text = "You died"

@@ -1,12 +1,11 @@
-extends KinematicBody
+extends CharacterBody3D
 #Created by elmarcoh (some things added by Yni). License: The Unlicense. This project is from here: https://github.com/elmarcoh/fps-controller-godot
-onready var camRoot = $CameraRoot
-onready var camera = $CameraRoot/Camera
-onready var raycast = $CameraRoot/Camera/RayCast
+@onready var camRoot = $CameraRoot
+@onready var camera = $CameraRoot/Camera3D
 
-export(float) var max_health = 100
+@export var max_health: float = 100
 
-var velocity = Vector3.ZERO
+var vel = Vector3.ZERO
 var current_velocity = Vector3.ZERO
 var direction = Vector3.ZERO
 
@@ -30,9 +29,9 @@ func _ready():
 
 func _input(event):
 	if event is InputEventMouseMotion:
-		camRoot.rotate_x(deg2rad(event.relative.y * MOUSE_SENSITIVITY * -1))
-		camRoot.rotation_degrees.x = clamp(camRoot.rotation_degrees.x, -75, 75)
-		self.rotate_y(deg2rad(event.relative.x * MOUSE_SENSITIVITY * -1))
+		camRoot.rotate_x(deg_to_rad(event.relative.y * MOUSE_SENSITIVITY * -1))
+		camRoot.rotation.x = clamp(camRoot.rotation.x, -75, 75)
+		self.rotate_y(deg_to_rad(event.relative.x * MOUSE_SENSITIVITY * -1))
 
 func _process(delta):
 	window_activity()
@@ -60,13 +59,13 @@ func _physics_process(delta):
 	direction = direction.normalized()
 	
 	#jump
-	velocity.y += GRAVITY * delta
+	vel.y += GRAVITY * delta
 	if is_on_floor():
 		jump_counter = 0
 		
 	if Input.is_action_just_pressed("jump") and jump_counter < 1:
 		jump_counter += 1
-		velocity.y = JUMP_SPEED
+		vel.y = JUMP_SPEED
 	
 	var speed = SPRINT_SPEED if Input.is_action_pressed("sprint") else SPEED
 	var target_vel = direction * speed
@@ -74,12 +73,18 @@ func _physics_process(delta):
 	var accel = ACCEL if is_on_floor() else AIR_ACCEL
 	
 	current_velocity = \
-		current_velocity.linear_interpolate(target_vel, accel * delta)
-	velocity.x = current_velocity.x
-	velocity.z = current_velocity.z
-	velocity = move_and_slide(velocity, Vector3.UP, true, 4, deg2rad(45))
+		current_velocity.lerp(target_vel, accel * delta)
+	vel.x = current_velocity.x
+	vel.z = current_velocity.z
+	set_velocity(vel)
+	set_up_direction(Vector3.UP)
+	set_floor_stop_on_slope_enabled(true)
+	set_max_slides(4)
+	set_floor_max_angle(deg_to_rad(45))
+	move_and_slide()
+	vel = vel
 
-func damage(var minus: float):
+func damage(minus: float):
 	if health > 0:
 		health -= minus
 	
@@ -87,9 +92,9 @@ func damage(var minus: float):
 		die()
 		
 
-func heal(var plus: float):
+func heal(plus: float):
 	health += plus
 
 func die():
-	$Death/Panel.show()
-	$Death/Label.show()
+	$UI/DeathPanel.show()
+	$UI/DeathLabel.show()

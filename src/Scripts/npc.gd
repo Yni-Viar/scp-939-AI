@@ -1,4 +1,4 @@
-extends KinematicBody
+extends CharacterBody3D
 
 
 const VEL_SPEED = 3 #speed
@@ -31,9 +31,10 @@ func _physics_process(delta):
 			set_state('939_Idle')
 		elif transform.origin.distance_to(Common.player.transform.origin) < 2:
 			set_state('939_Attack1')
-		var to_player = translation.direction_to(Common.player.translation)
-		move_and_slide(to_player * VEL_SPEED)
-		self.look_at(Common.player.translation, Vector3.UP)
+		var to_player = position.direction_to(Common.player.position)
+		set_velocity(to_player * VEL_SPEED)
+		move_and_slide()
+		self.look_at(Common.player.position, Vector3.UP)
 	
 	elif state == '939_Attack1':
 		if transform.origin.distance_to(Common.player.transform.origin) >= 2:

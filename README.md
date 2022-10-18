@@ -1,6 +1,6 @@
 # scp939
 
-SCP-939 AI sample in Godot Engine 3
+SCP-939 AI sample in Godot Engine 4 Beta 3
 
 It has some bugs: SCP-939 can float on air
 
