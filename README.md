@@ -1,4 +1,4 @@
-# scp939
+# scp-939-AI
 
 SCP-939 AI sample in Godot Engine 4 Beta 3
 
